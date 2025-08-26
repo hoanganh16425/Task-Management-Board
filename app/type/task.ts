@@ -10,10 +10,16 @@ export interface Task {
   description?: string;
   status: TaskStatus;
   priority: TaskPriority;
-  assignee?: string;
+  assignee?: TaskAssignee;
   dueDate?: string; 
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TaskAssignee {
+  id: string;
+  name: string;
+  avatar: string;
 }
 
 export interface TaskFormData {
@@ -22,6 +28,14 @@ export interface TaskFormData {
   status: TaskStatus;
   priority: TaskPriority;
   assignee?: string;
+  dueDate?: string;
+}
+export interface TaskData {
+  title: string;
+  description?: string;
+  status: TaskStatus;
+  priority: TaskPriority;
+  assignee?: TaskAssignee;
   dueDate?: string;
 }
 

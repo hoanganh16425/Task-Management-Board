@@ -2,6 +2,7 @@
 'use client';
 
 import {
+  Avatar,
     Button,
     Col,
     DatePicker,
@@ -14,13 +15,14 @@ import {
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect } from 'react';
-import { Task, TaskFormData, TaskStatus, TaskPriority } from '../type/task';
+import { Task, TaskFormData, TaskStatus, TaskPriority, TaskAssignee } from '../type/task';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 interface TaskFormProps {
   visible: boolean;
+  assignees: TaskAssignee[];
   task: Task | null;
   loading?: boolean;
   onClose: () => void;
@@ -63,6 +65,7 @@ const PRIORITY_OPTIONS: PriorityOption[] = [
 ];
 
 const TaskForm: React.FC<TaskFormProps> = ({ 
+  assignees,
   visible, 
   task, 
   loading = false,
@@ -78,7 +81,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
         description: task.description,
         status: task.status,
         priority: task.priority,
-        assignee: task.assignee,
+        assignee: task.assignee?.id,
         dueDate: task.dueDate ? dayjs(task.dueDate) : null,
       };
       form.setFieldsValue(formValues);
@@ -124,6 +127,13 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const renderPriorityOption = (option: PriorityOption): React.ReactNode => (
     <Option key={option.value} value={option.value}>
       {option.emoji} {option.label}
+    </Option>
+  );
+
+  const renderAssigneeOption = (option: { id: string; name: string, avatar: string }): React.ReactNode => (
+    <Option key={option.id} value={option.id} className='flex !items-center'>
+      <Avatar size='small' src={option.avatar} className='!mr-2' />
+      {option.name}
     </Option>
   );
 
@@ -228,11 +238,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
                 { max: 50, message: 'Assignee name cannot exceed 50 characters' }
               ]}
             >
-              <Input 
-                placeholder="Assign to team member..." 
-                prefix="👤"
-                maxLength={50}
-              />
+              <Select placeholder="Select priority level" >
+                {assignees.map(renderAssigneeOption)}
+              </Select>
             </Form.Item>
           </Col>
           

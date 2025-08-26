@@ -1,11 +1,9 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
 import AntdProvider from './component/providers/AntdProvider';
 import StoreProvider from './component/providers/StoreProvider';
 import '@ant-design/v5-patch-for-react-19';
 
-const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'TaskFlow - Modern Task Management',
@@ -20,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <StoreProvider>
           <AntdProvider>
             {children}

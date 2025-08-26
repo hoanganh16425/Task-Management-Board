@@ -3,14 +3,14 @@
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { Task, TaskFormData, TaskStatus } from '../type/task';
+import { Task, TaskData, TaskFormData, TaskStatus } from '../type/task';
 
 interface TaskStore {
   tasks: Task[];
   loading: boolean;
 
   // Actions
-  addTask: (task: TaskFormData) => Promise<void>;
+  addTask: (task: TaskData) => Promise<void>;
   updateTask: (id: string, updates: Partial<Task>) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
   moveTask: (taskId: string, newStatus: TaskStatus) => void;
@@ -24,7 +24,7 @@ export const useTaskStore = create<TaskStore>()(
         tasks: [],
         loading: false,
         error: null,
-        addTask: async (taskData: TaskFormData) => {
+        addTask: async (taskData: TaskData) => {
           set({ loading: true });
           const newTask: Task = {
             ...taskData,

@@ -85,8 +85,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDelete }) =>
               ]}
             >
               <Space direction="vertical" size="small" style={{ width: '100%' }}>
-                <div className="flex justify-between items-start">
-                  <Text strong className="text-sm flex-1">
+                <div className="flex justify-between items-start gap-4">
+                  <Text strong className="text-sm flex-1 text-ellipsis overflow-hidden max-w-[80px] whitespace-nowrap">
                     {task.title}
                   </Text>
                   <Tag color={priorityColors[task.priority]}>
@@ -96,18 +96,18 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDelete }) =>
 
                 {task.description && (
                   <p
-                    className="m-0 text-xs text-[#666] min-h-[35px] leading-[1.4]"
+                    className="m-0 text-xs text-[#666] leading-[1.4]"
                     title={task.description}
                   >
                     {task.description}
                   </p>
                 )}
 
-                <div className="flex justify-between items-center flex-wrap gap-1">
+                <div className="flex justify-between flex-col  flex-wrap gap-1">
                   {task.assignee && (
                     <Space size="small">
-                      <Avatar size={16} icon={<UserOutlined />} />
-                      <Text className="text-xs">{task.assignee}</Text>
+                      <Avatar size={16} src={task.assignee.avatar} icon={<UserOutlined />} />
+                      <Text className="text-xs">{task.assignee?.name}</Text>
                     </Space>
                   )}
 

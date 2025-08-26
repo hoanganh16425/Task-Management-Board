@@ -3,9 +3,9 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { DragDropContext, DropResult } from '@hello-pangea/dnd';
 import { Button, Col, Input, Row, Typography } from 'antd';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTaskStore } from '../stores/taskStore';
-import { ColumnConfig, Task, TaskFormData, TaskStatus } from '../type/task';
+import { ColumnConfig, Task, TaskAssignee, TaskFormData, TaskStatus } from '../type/task';
 import TaskColumn from './TaskCollumn';
 import TaskForm from './TaskForm';
 
@@ -35,6 +35,17 @@ const TaskBoard: React.FC = () => {
     const [searchText, setSearchText] = useState<string>('');
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [searchQuery, setSearchQuery] = useState<string>('');
+
+    const [assignees, setAssignees] = React.useState<TaskAssignee[]>([]);
+
+    useEffect(() => {
+        const fetchAsignees = async () => {
+            const response = await fetch('/api/assignee');
+            const data = await response.json();
+            setAssignees(data);
+        }
+        fetchAsignees();
+    }, []);
 
     const tasksByStatus = useMemo((): Record<TaskStatus, Task[]> => {
         return COLUMNS.reduce((acc, column) => {
@@ -85,11 +96,15 @@ const TaskBoard: React.FC = () => {
     };
 
     const handleFormSubmit = async (values: TaskFormData): Promise<void> => {
+        const updateValues = {
+            ...values,
+            assignee: assignees.find(assignee => assignee.id === values.assignee)
+        }
         if (editingTask) {
-            await updateTask(editingTask.id, values);
+            await updateTask(editingTask.id, updateValues);
             setEditingTask(null);
         } else {
-            await addTask(values);
+            await addTask(updateValues);
         }
         setFormVisible(false);
     };
@@ -164,6 +179,7 @@ const TaskBoard: React.FC = () => {
                 onClose={handleCloseForm}
                 onSubmit={handleFormSubmit}
                 loading={loading}
+                assignees={assignees}
             />
         </div>
     );
