@@ -1,39 +1,36 @@
 'use client';
 
 import { PlusOutlined } from '@ant-design/icons';
-import { DragDropContext, DropResult } from '@hello-pangea/dnd';
-import { Button, Col, Input, Row, Typography } from 'antd';
+import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
+import { Button, Input, Typography } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
+import { TaskBoardDragType } from '../constants/task-board.constant';
 import { useTaskStore } from '../stores/taskStore';
-import { ColumnConfig, Task, TaskAssignee, TaskFormData, TaskStatus } from '../type/task';
+import { ColumnFormData, Task, TaskAssignee, TaskFormData } from '../type/task';
+import ColumnForm from './ColumnForm';
 import TaskColumn from './TaskCollumn';
 import TaskForm from './TaskForm';
 
 const { Title } = Typography;
 const { Search } = Input;
 
-const COLUMNS: ColumnConfig[] = [
-    { id: 'todo', title: 'To Do', color: '#ff4d4f' },
-    { id: 'in-progress', title: 'In Progress', color: '#1890ff' },
-    { id: 'review', title: 'Review', color: '#faad14' },
-    { id: 'deploy', title: 'Deploy', color: '#6900f3ff' },
-    { id: 'testing', title: 'Testing', color: '#f3cf005b' },
-    { id: 'done', title: 'Done', color: '#52c41a' },
-];
-
 const TaskBoard: React.FC = () => {
     const {
         tasks,
         loading,
+        columns,
         addTask,
         updateTask,
         deleteTask,
         moveTask,
+        addColumn,
+        moveColumn,
     } = useTaskStore();
 
     const [formVisible, setFormVisible] = useState<boolean>(false);
     const [searchText, setSearchText] = useState<string>('');
     const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [isOpenCreateColumn, setisOpenCreateColumn] = useState<boolean>(false);
     const [searchQuery, setSearchQuery] = useState<string>('');
 
     const [assignees, setAssignees] = React.useState<TaskAssignee[]>([]);
@@ -47,8 +44,8 @@ const TaskBoard: React.FC = () => {
         fetchAsignees();
     }, []);
 
-    const tasksByStatus = useMemo((): Record<TaskStatus, Task[]> => {
-        return COLUMNS.reduce((acc, column) => {
+    const tasksByStatus = useMemo((): Record<string, Task[]> => {
+        return columns.reduce((acc, column) => {
             acc[column.id] = tasks.filter(task => {
                 const matchesStatus = task.status === column.id;
                 const matchesSearch = !searchQuery ||
@@ -57,8 +54,8 @@ const TaskBoard: React.FC = () => {
                 return matchesStatus && matchesSearch;
             });
             return acc;
-        }, {} as Record<TaskStatus, Task[]>);
-    }, [tasks, searchQuery]);
+        }, {} as Record<string, Task[]>);
+    }, [tasks, searchQuery, columns]);
 
     const handleSearch = (value: string): void => {
         setSearchQuery(value);
@@ -70,10 +67,9 @@ const TaskBoard: React.FC = () => {
     };
 
     const handleDragEnd = (result: DropResult): void => {
-        const { destination, source, draggableId } = result;
+        const { destination, source, draggableId, type } = result;
 
         if (!destination) return;
-
         if (
             destination.droppableId === source.droppableId &&
             destination.index === source.index
@@ -81,8 +77,25 @@ const TaskBoard: React.FC = () => {
             return;
         }
 
-        const newStatus = destination.droppableId as TaskStatus;
-        moveTask(draggableId, newStatus);
+        const newStatus = destination.droppableId as string;
+        if (type === TaskBoardDragType.COLUMN) {
+            moveColumn(source.index, destination.index);
+        } else {
+            moveTask(draggableId, newStatus);
+        }
+    };
+
+    const onCreateColumn = (): void => {
+        setisOpenCreateColumn(true);
+    };
+
+    const handleCreateColumn = async (values: ColumnFormData): Promise<void> => {
+        addColumn({ ...values, id: values.title });
+        setisOpenCreateColumn(false);
+    };
+
+    const handleCancelCreateColumn = (): void => {
+        setisOpenCreateColumn(false);
     };
 
     const handleCreateTask = (): void => {
@@ -140,6 +153,15 @@ const TaskBoard: React.FC = () => {
                     >
                         Add Task
                     </Button>
+                    <Button
+                        type="primary"
+                        icon={<PlusOutlined />}
+                        onClick={onCreateColumn}
+                        size="large"
+                        disabled={loading}
+                    >
+                        Add Column
+                    </Button>
                 </div>
             </div>
 
@@ -156,21 +178,45 @@ const TaskBoard: React.FC = () => {
             </div>
 
             <DragDropContext onDragEnd={handleDragEnd}>
-                <Row gutter={[16, 16]}>
-                    {COLUMNS.map((column) => (
-                        <Col key={column.id} xs={24} sm={12} lg={4}>
-                            <TaskColumn
-                                status={column.id}
-                                title={column.title}
-                                color={column.color}
-                                tasks={tasksByStatus[column.id] || []}
-                                onEditTask={handleEditTask}
-                                onDeleteTask={handleDeleteTask}
-                                loading={loading}
-                            />
-                        </Col>
-                    ))}
-                </Row>
+                <Droppable
+                    droppableId="columns"
+                    direction="horizontal"
+                    type='COLUMN'
+                >
+                    {(provided) => (
+                        <div
+                            className='flex gap-4 overflow-x-auto pb-2'
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                        >
+                            {columns.map((column, index) => (
+                                <Draggable
+                                    draggableId={column.id.toString()}
+                                    index={index}
+                                    key={column.id}
+                                >
+                                    {(provided) => (
+                                        <div
+                                            className='min-w-[300px] max-w-[400px] w-full'
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                        >
+                                            <TaskColumn
+                                                status={column.id}
+                                                title={column.title}
+                                                color={column.color}
+                                                tasks={tasksByStatus[column.id] || []}
+                                                onEditTask={handleEditTask}
+                                                onDeleteTask={handleDeleteTask}
+                                                loading={loading}
+                                            />
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                        </div>)}
+                </Droppable>
             </DragDropContext>
 
             <TaskForm
@@ -178,6 +224,13 @@ const TaskBoard: React.FC = () => {
                 task={editingTask}
                 onClose={handleCloseForm}
                 onSubmit={handleFormSubmit}
+                loading={loading}
+                assignees={assignees}
+            />
+            <ColumnForm
+                visible={isOpenCreateColumn}
+                onClose={handleCancelCreateColumn}
+                onCreateColumn={handleCreateColumn}
                 loading={loading}
                 assignees={assignees}
             />

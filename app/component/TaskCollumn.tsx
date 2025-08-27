@@ -1,15 +1,17 @@
 'use client';
 
-import React from 'react';
-import { Card, Typography, Badge, Space, Empty } from 'antd';
 import { Droppable } from '@hello-pangea/dnd';
-import { TaskStatus, Task } from '../type/task';
+import { Badge, Card, Empty, Modal, Space, Typography } from 'antd';
+import React, { useState } from 'react';
+import { Task } from '../type/task';
 import TaskCard from './TaskCard';
+import { DeleteOutlined } from '@ant-design/icons';
+import { useTaskStore } from '../stores/taskStore';
 
 const { Title } = Typography;
 
 interface TaskColumnProps {
-  status: TaskStatus;
+  status: string;
   title: string;
   color: string;
   tasks: Task[];
@@ -25,20 +27,36 @@ const TaskColumn: React.FC<TaskColumnProps> = ({
   tasks,
   loading = false,
   onEditTask,
-  onDeleteTask
+  onDeleteTask,
 }) => {
+  const { deleteColumn } = useTaskStore();
+
+  const [isOpendeleteColumn, setisOpenDeleteColumn] = useState<boolean>(false);
+
+  const onDeleteColumn = (): void => {
+    setisOpenDeleteColumn(true);
+  };
+
+  const handleDeleteColumn = async (values: string): Promise<void> => {
+    deleteColumn(values);
+    setisOpenDeleteColumn(false);
+  };
+
   return (
     <Card
       title={
-        <Space>
-          <Title level={5} style={{ margin: "0px"}}>
-            {title}
-          </Title>
-          <Badge
-            count={tasks.length}
-            style={{ backgroundColor: color }}
-            showZero
-          />
+        <Space className='flex items-center justify-between w-full'>
+          <div className='flex items-center justify-between w-full align-middle gap-2'>
+            <Title level={5} style={{ margin: "0px" }}>
+              {title}
+            </Title>
+            <Badge
+              count={tasks.length}
+              style={{ backgroundColor: color }}
+              showZero
+            />
+          </div>
+          <DeleteOutlined className='!text-red-500' onClick={() => onDeleteColumn()} />
         </Space>
       }
       className="h-[600px] bg-[#fafafa]"
@@ -80,6 +98,17 @@ const TaskColumn: React.FC<TaskColumnProps> = ({
           </div>
         )}
       </Droppable>
+      <Modal
+        title="Confirm Deletion"
+        closable={{ 'aria-label': 'Custom Close Button' }}
+        open={isOpendeleteColumn}
+        okText='Yes'
+        okType='danger'
+        onOk={() => handleDeleteColumn(status)}
+        onCancel={() => setisOpenDeleteColumn(false)}
+      >
+        Are you sure to delete this column?
+      </Modal>
     </Card>
   );
 };

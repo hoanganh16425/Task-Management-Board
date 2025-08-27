@@ -39,7 +39,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDelete }) =>
 
   return (
     <>
-      <Draggable draggableId={task.id} index={index} isDragDisabled={task.status === 'done'}>
+      <Draggable draggableId={task.id} index={index} >
         {(provided, snapshot) => (
           <div
             ref={provided.innerRef}

@@ -3,19 +3,19 @@
 
 import {
   Avatar,
-    Button,
-    Col,
-    DatePicker,
-    Form,
-    Input,
-    Modal,
-    Row,
-    Select,
-    Space
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Space
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect } from 'react';
-import { Task, TaskFormData, TaskStatus, TaskPriority, TaskAssignee } from '../type/task';
+import { Task, TaskAssignee, TaskFormData, TaskPriority } from '../type/task';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -32,14 +32,14 @@ interface TaskFormProps {
 interface FormValues {
   title: string;
   description?: string;
-  status: TaskStatus;
+  status: string;
   priority: TaskPriority;
   assignee?: string;
   dueDate?: Dayjs | null;
 }
 
 interface StatusOption {
-  value: TaskStatus;
+  value: string;
   label: string;
   emoji: string;
 }
@@ -167,7 +167,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
         form={form}
         layout="vertical"
         initialValues={{
-          status: 'todo' as TaskStatus,
+          status: 'todo',
           priority: 'medium' as TaskPriority,
         }}
         requiredMark={false}

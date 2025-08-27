@@ -8,12 +8,17 @@ export interface Task {
   id: string;
   title: string;
   description?: string;
-  status: TaskStatus;
+  status: string;
   priority: TaskPriority;
   assignee?: TaskAssignee;
   dueDate?: string; 
   createdAt: string;
   updatedAt: string;
+}
+export interface ColumnTask {
+  id: string;
+  title: string;
+  color: string
 }
 
 export interface TaskAssignee {
@@ -25,15 +30,20 @@ export interface TaskAssignee {
 export interface TaskFormData {
   title: string;
   description?: string;
-  status: TaskStatus;
+  status: string;
   priority: TaskPriority;
   assignee?: string;
   dueDate?: string;
 }
+
+export interface  ColumnFormData {
+  title: string;
+  color: string;
+}
 export interface TaskData {
   title: string;
   description?: string;
-  status: TaskStatus;
+  status: string;
   priority: TaskPriority;
   assignee?: TaskAssignee;
   dueDate?: string;
@@ -41,7 +51,7 @@ export interface TaskData {
 
 // Store types
 export interface TaskFilters {
-  status?: TaskStatus[];
+  status?: string[];
   priority?: TaskPriority[];
   assignee?: string;
   search?: string;
@@ -53,18 +63,18 @@ export interface TaskStats {
   inProgress: number;
   overdue: number;
   byPriority: Record<TaskPriority, number>;
-  byStatus: Record<TaskStatus, number>;
+  byStatus: Record<string, number>;
 }
 
 export interface TaskColumn {
-  id: TaskStatus;
+  id: string;
   title: string;
   color: string;
   limit?: number;
 }
 
 export interface ColumnConfig {
-    id: TaskStatus;
+    id: string;
     title: string;
     color: string;
     limit?: number;
