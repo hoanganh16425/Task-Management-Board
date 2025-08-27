@@ -1,4 +1,3 @@
-// app/api/assignee/route.ts
 import { NextResponse } from 'next/server'
 
 const ASSIGNEE = [

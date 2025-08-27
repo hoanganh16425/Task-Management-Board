@@ -3,7 +3,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
-import { ColumnTask, Task, TaskData, TaskStatus } from '../type/task';
+import { ColumnTask, Task, TaskData } from '../type/task';
 import { COLUMNS } from '../constants/task-board.constant';
 
 interface TaskStore {

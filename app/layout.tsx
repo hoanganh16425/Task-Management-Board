@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import AntdProvider from './component/providers/AntdProvider';
-import StoreProvider from './component/providers/StoreProvider';
 import '@ant-design/v5-patch-for-react-19';
 
 
@@ -19,11 +18,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <StoreProvider>
-          <AntdProvider>
-            {children}
-          </AntdProvider>
-        </StoreProvider>
+        <AntdProvider>
+          {children}
+        </AntdProvider>
       </body>
     </html>
   );

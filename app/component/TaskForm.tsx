@@ -15,7 +15,8 @@ import {
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect } from 'react';
-import { Task, TaskAssignee, TaskFormData, TaskPriority } from '../type/task';
+import { Task, TaskAssignee, TaskColumn, TaskFormData, TaskPriority } from '../type/task';
+import { useTaskStore } from '../stores/taskStore';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -38,24 +39,11 @@ interface FormValues {
   dueDate?: Dayjs | null;
 }
 
-interface StatusOption {
-  value: string;
-  label: string;
-  emoji: string;
-}
-
 interface PriorityOption {
   value: TaskPriority;
   label: string;
   emoji: string;
 }
-
-const STATUS_OPTIONS: StatusOption[] = [
-  { value: 'todo', label: 'To Do', emoji: '📋' },
-  { value: 'in-progress', label: 'In Progress', emoji: '🚀' },
-  { value: 'review', label: 'Review', emoji: '👀' },
-  { value: 'done', label: 'Done', emoji: '✅' },
-];
 
 const PRIORITY_OPTIONS: PriorityOption[] = [
   { value: 'low', label: 'Low', emoji: '🟢' },
@@ -73,6 +61,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   onSubmit 
 }) => {
   const [form] = Form.useForm<FormValues>();
+  const { columns } = useTaskStore();
 
   useEffect(() => {
     if (task && visible) {
@@ -118,9 +107,9 @@ const TaskForm: React.FC<TaskFormProps> = ({
     return current && current < dayjs().startOf('day');
   };
 
-  const renderStatusOption = (option: StatusOption): React.ReactNode => (
-    <Option key={option.value} value={option.value}>
-      {option.emoji} {option.label}
+  const renderStatusOption = (option: TaskColumn): React.ReactNode => (
+    <Option key={option.title} value={option.title}>
+      <span className='uppercase'>{option.title}</span>
     </Option>
   );
 
@@ -133,7 +122,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const renderAssigneeOption = (option: { id: string; name: string, avatar: string }): React.ReactNode => (
     <Option key={option.id} value={option.id} className='flex !items-center'>
       <Avatar size='small' src={option.avatar} className='!mr-2' />
-      {option.name}
+      <span>{option.name}</span>
     </Option>
   );
 
@@ -210,8 +199,8 @@ const TaskForm: React.FC<TaskFormProps> = ({
               label="Status"
               rules={[{ required: true, message: 'Please select a status' }]}
             >
-              <Select placeholder="Select task status">
-                {STATUS_OPTIONS.map(renderStatusOption)}
+              <Select placeholder="Select task status" className='uppercase'>
+                {columns.map(renderStatusOption)}
               </Select>
             </Form.Item>
           </Col>
