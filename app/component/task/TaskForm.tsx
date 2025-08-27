@@ -15,8 +15,8 @@ import {
 } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import React, { useEffect } from 'react';
-import { Task, TaskAssignee, TaskColumn, TaskFormData, TaskPriority } from '../type/task';
-import { useTaskStore } from '../stores/taskStore';
+import { Task, TaskAssignee, TaskColumn, TaskFormData, TaskPriority } from '../../type/task';
+import { useTaskStore } from '../../stores/taskStore';
 
 const { TextArea } = Input;
 const { Option } = Select;

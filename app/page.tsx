@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import TaskBoardWrapper from './component/TaskBoardWrapper';
+import TaskBoardWrapper from './component/task/TaskBoardWrapper';
 
 export const metadata: Metadata = {
   title: 'Task Board | TaskFlow',

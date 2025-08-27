@@ -8,11 +8,12 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { Draggable } from '@hello-pangea/dnd';
-import { Avatar, Button, Card, Modal, Space, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import React, { useState } from 'react';
-import { Task, TaskPriority } from '../type/task';
+import { Task, TaskPriority } from '../../type/task';
+import ConfirmDialog from '../shares/confirmDialog';
 
 dayjs.extend(relativeTime);
 
@@ -148,17 +149,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task, index, onEdit, onDelete }) =>
           </div>
         )}
       </Draggable>
-      <Modal
+      <ConfirmDialog
         title="Confirm Deletion"
-        closable={{ 'aria-label': 'Custom Close Button' }}
-        open={isModalOpen}
-        okText='Yes'
-        okType='danger'
-        onOk={() => onDelete(task.id)}
-        onCancel={() => setIsModalOpen(false)}
-      >
-        Are you sure to delete this task?
-      </Modal>
+        okText="Yes"
+        okType="danger"
+        confirmText="Are you sure to delete this task?"
+        isModalOpen={isModalOpen}
+        onConfirm={() => onDelete(task.id)}
+        onClose={() => setIsModalOpen(false)}
+      />
     </>
 
   );

@@ -10,7 +10,7 @@ import {
     Space
 } from 'antd';
 import React from 'react';
-import { ColumnFormData, TaskAssignee } from '../type/task';
+import { ColumnFormData, TaskAssignee } from '../../type/task';
 
 interface TaskFormProps {
   visible: boolean;

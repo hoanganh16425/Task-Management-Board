@@ -1,12 +1,13 @@
 'use client';
 
 import { Droppable } from '@hello-pangea/dnd';
-import { Badge, Card, Empty, Modal, Space, Typography } from 'antd';
+import { Badge, Card, Empty, Space, Typography } from 'antd';
 import React, { useState } from 'react';
-import { Task } from '../type/task';
+import { Task } from '../../type/task';
 import TaskCard from './TaskCard';
 import { DeleteOutlined } from '@ant-design/icons';
-import { useTaskStore } from '../stores/taskStore';
+import { useTaskStore } from '../../stores/taskStore';
+import ConfirmDialog from '../shares/confirmDialog';
 
 const { Title } = Typography;
 
@@ -98,17 +99,15 @@ const TaskColumn: React.FC<TaskColumnProps> = ({
           </div>
         )}
       </Droppable>
-      <Modal
+      <ConfirmDialog
         title="Confirm Deletion"
-        closable={{ 'aria-label': 'Custom Close Button' }}
-        open={isOpendeleteColumn}
-        okText='Yes'
-        okType='danger'
-        onOk={() => handleDeleteColumn(status)}
-        onCancel={() => setisOpenDeleteColumn(false)}
-      >
-        Are you sure to delete this column?
-      </Modal>
+        okText="Yes"
+        okType="danger"
+        confirmText="Are you sure to delete this column?"
+        isModalOpen={isOpendeleteColumn}
+        onConfirm={() => handleDeleteColumn(status)}
+        onClose={() => setisOpenDeleteColumn(false)}
+      />    
     </Card>
   );
 };
