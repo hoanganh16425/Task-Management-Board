@@ -2,6 +2,8 @@
 
 import React from 'react';
 import { ConfigProvider, theme } from 'antd';
+import { StyleProvider } from '@ant-design/cssinjs';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 interface AntdProviderProps {
   children: React.ReactNode;
@@ -9,25 +11,27 @@ interface AntdProviderProps {
 
 const AntdProvider: React.FC<AntdProviderProps> = ({ children }) => {
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: theme.defaultAlgorithm,
-        token: {
-          colorPrimary: '#1890ff',
-          borderRadius: 8,
-        },
-        components: {
-          Layout: {
-            headerBg: '#ffffff',
+    <StyleProvider hashPriority="high">
+      <ConfigProvider
+        theme={{
+          algorithm: theme.defaultAlgorithm,
+          token: {
+            colorPrimary: '#1890ff',
+            borderRadius: 8,
           },
-          Card: {
-            borderRadiusLG: 12,
+          components: {
+            Layout: {
+              headerBg: '#ffffff',
+            },
+            Card: {
+              borderRadiusLG: 12,
+            },
           },
-        },
-      }}
-    >
-      {children}
-    </ConfigProvider>
+        }}
+      >
+       <AntdRegistry>{children}</AntdRegistry>
+      </ConfigProvider>
+    </StyleProvider>
   );
 };
 
