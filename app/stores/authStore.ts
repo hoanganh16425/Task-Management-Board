@@ -27,25 +27,14 @@ interface AuthStore {
 }
 
 const mockLogin = async (email: string, password: string): Promise<User> => {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    if (email === 'admin@taskflow.com' && password === 'password123') {
-        return {
-            id: '1',
-            name: 'John Doe',
-            email: 'admin@taskflow.com',
-            role: 'Project Manager',
-        };
-    } else if (email === 'user@taskflow.com' && password === 'password123') {
-        return {
-            id: '2',
-            name: 'Jane Smith',
-            email: 'user@taskflow.com',
-            role: 'Developer',
-        };
-    } else {
-        throw new Error('Invalid email or password');
-    }
+    const data =  await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+    }).then(res => res.json());
+    return data.user;
 };
 
 export const useAuthStore = create<AuthStore>()(
@@ -78,7 +67,11 @@ export const useAuthStore = create<AuthStore>()(
                 }
             },
 
-            logout: () => {
+            logout: async () => {
+                await fetch('/api/logout', {
+                    method: 'POST',
+                    credentials: 'include',
+                });
                 set({
                     user: null,
                     isAuthenticated: false,

@@ -37,6 +37,7 @@ const LoginForm: React.FC = () => {
         await login(values.email, values.password);
         const { isAuthenticated } = useAuthStore.getState();
         if (isAuthenticated) {
+            router.refresh(); 
             router.push('/dashboard');
         }
     };
