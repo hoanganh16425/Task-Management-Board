@@ -5,8 +5,6 @@ import { Layout, Menu, Typography, Space, Avatar, Button } from 'antd';
 import {
     DashboardOutlined,
     ProjectOutlined,
-    TeamOutlined,
-    SettingOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
 } from '@ant-design/icons';
