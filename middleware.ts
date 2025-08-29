@@ -10,6 +10,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  if (!token && pathname.startsWith('/task-board')) {
+    const loginUrl = new URL('/login', request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
   if (token && pathname.startsWith('/login')) {
     const homeUrl = new URL('/dashboard', request.url);
     return NextResponse.redirect(homeUrl);

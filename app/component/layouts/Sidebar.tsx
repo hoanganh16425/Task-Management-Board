@@ -51,6 +51,7 @@ const ClientSidebar: React.FC<ClientSidebarProps> = ({ onCollapseChange }) => {
             style={{
                 backgroundColor: '#001529',
                 boxShadow: '2px 0 8px rgba(0,0,0,0.15)',
+                maxHeight: '100vh'
             }}
             width={260}
             breakpoint="sm"

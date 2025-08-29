@@ -156,7 +156,6 @@ const TaskForm: React.FC<TaskFormProps> = ({
         form={form}
         layout="vertical"
         initialValues={{
-          status: 'todo',
           priority: 'medium' as TaskPriority,
         }}
         requiredMark={false}

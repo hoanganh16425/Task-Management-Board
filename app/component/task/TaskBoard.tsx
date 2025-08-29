@@ -2,7 +2,7 @@
 
 import { PlusOutlined } from '@ant-design/icons';
 import { DragDropContext, Draggable, Droppable, DropResult } from '@hello-pangea/dnd';
-import { Button, Input, Typography } from 'antd';
+import { Button, Empty, Input, Typography } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { TaskBoardDragType } from '../../constants/task-board.constant';
 import { useTaskStore } from '../../stores/taskStore';
@@ -43,8 +43,11 @@ const TaskBoard: React.FC = () => {
         }
         fetchAsignees();
     }, []);
+    
 
     const tasksByStatus = useMemo((): Record<string, Task[]> => {
+        console.log(tasks);
+        
         return columns.reduce((acc, column) => {
             acc[column.id] = tasks.filter(task => {
                 const matchesStatus = task.status === column.id;
@@ -132,11 +135,11 @@ const TaskBoard: React.FC = () => {
     };
 
     return (
-        <div className="p-6 max-w-[1600px] mx-auto">
+        <>
             <div className="mb-8 flex justify-between items-center flex-wrap gap-4">
                 <div>
                     <Title level={2} className='m-0'>
-                        Task Management Board
+                        Task Board
                     </Title>
                     <p className="mt-2 text-gray-600">
                         Organize and track your tasks with ease
@@ -176,6 +179,14 @@ const TaskBoard: React.FC = () => {
                     allowClear
                 />
             </div>
+
+            {
+                columns && <Empty
+                description={`No column task`}
+                className="mt-[50px]"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            }
 
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable
@@ -234,7 +245,7 @@ const TaskBoard: React.FC = () => {
                 loading={loading}
                 assignees={assignees}
             />
-        </div>
+        </>
     );
 };
 

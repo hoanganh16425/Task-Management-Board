@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { create } from 'zustand';
 import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import { ColumnTask, Task, TaskData } from '../type/task';
-import { COLUMNS } from '../constants/task-board.constant';
 
 interface TaskStore {
   tasks: Task[];
@@ -27,7 +26,7 @@ export const useTaskStore = create<TaskStore>()(
     persist(
       (set) => ({
         tasks: [],
-        columns: [...COLUMNS],
+        columns: [],
         loading: false,
         error: null,
         addColumn: async (columnData: ColumnTask) => {

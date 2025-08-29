@@ -1,17 +1,13 @@
-'use client';
-
-import React from 'react';
-import { Row, Col, Card, Statistic, Progress, Typography, Space, Avatar, List } from 'antd';
-import { 
-  ProjectOutlined, 
-  CheckCircleOutlined, 
-  ClockCircleOutlined, 
+import RecentTask from '@/app/component/dasboard/RecentTask';
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  ProjectOutlined,
   TeamOutlined,
-  TrophyOutlined,
-  CalendarOutlined
+  TrophyOutlined
 } from '@ant-design/icons';
-
-const { Text } = Typography;
+import { Card, Col, Progress, Row, Space, Statistic } from 'antd';
+import React from 'react';
 
 const DashboardContent: React.FC = () => {
   const stats = [
@@ -41,12 +37,6 @@ const DashboardContent: React.FC = () => {
     },
   ];
 
-  const recentTasks = [
-    { id: 1, title: 'Update user interface design', assignee: 'Alice Johnson', status: 'completed' },
-    { id: 2, title: 'Implement authentication system', assignee: 'Bob Smith', status: 'in-progress' },
-    { id: 3, title: 'Write API documentation', assignee: 'Carol White', status: 'pending' },
-    { id: 4, title: 'Review code changes', assignee: 'David Brown', status: 'in-progress' },
-  ];
 
   return (
     <div style={{ padding: '24px' }}>
@@ -69,7 +59,7 @@ const DashboardContent: React.FC = () => {
       <Row gutter={[16, 16]}>
         {/* Project Progress */}
         <Col xs={24} lg={12}>
-          <Card 
+          <Card
             title={
               <Space>
                 <TrophyOutlined />
@@ -78,19 +68,19 @@ const DashboardContent: React.FC = () => {
             }
           >
             <div style={{ marginBottom: '16px' }}>
-              <Text strong>Website Redesign</Text>
+              <p>Website Redesign</p>
               <Progress percent={75} status="active" />
             </div>
             <div style={{ marginBottom: '16px' }}>
-              <Text strong>Mobile App Development</Text>
+              <p>Mobile App Development</p>
               <Progress percent={45} />
             </div>
             <div style={{ marginBottom: '16px' }}>
-              <Text strong>Database Migration</Text>
+              <p>Database Migration</p>
               <Progress percent={90} status="active" />
             </div>
             <div>
-              <Text strong>API Integration</Text>
+              <p>API Integration</p>
               <Progress percent={30} />
             </div>
           </Card>
@@ -98,43 +88,7 @@ const DashboardContent: React.FC = () => {
 
         {/* Recent Tasks */}
         <Col xs={24} lg={12}>
-          <Card 
-            title={
-              <Space>
-                <CalendarOutlined />
-                <span>Recent Tasks</span>
-              </Space>
-            }
-          >
-            <List
-              itemLayout="horizontal"
-              dataSource={recentTasks}
-              renderItem={(task) => (
-                <List.Item>
-                  <List.Item.Meta
-                    avatar={<Avatar style={{ backgroundColor: '#1890ff' }}>{task.assignee.charAt(0)}</Avatar>}
-                    title={<Text>{task.title}</Text>}
-                    description={
-                      <Space>
-                        <Text type="secondary">{task.assignee}</Text>
-                        <span style={{ 
-                          padding: '2px 8px', 
-                          borderRadius: '4px', 
-                          fontSize: '11px',
-                          backgroundColor: task.status === 'completed' ? '#f6ffed' : 
-                                          task.status === 'in-progress' ? '#e6f7ff' : '#fff7e6',
-                          color: task.status === 'completed' ? '#52c41a' : 
-                                 task.status === 'in-progress' ? '#1890ff' : '#faad14'
-                        }}>
-                          {task.status.replace('-', ' ').toUpperCase()}
-                        </span>
-                      </Space>
-                    }
-                  />
-                </List.Item>
-              )}
-            />
-          </Card>
+          <RecentTask></RecentTask>
         </Col>
       </Row>
     </div>
