@@ -65,9 +65,9 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({
     ];
 
     return (
-        <Header className="px-6 bg-white shadow-sm flex items-center justify-between sticky top-0 z-[100]">
+        <Header className="!p-2 sm:px-6 bg-white shadow-sm flex items-center justify-between sticky top-0 z-[100]">
             <div>
-                <h4 className="font-semibold text-lg">{title}</h4>
+                <h4 className="leading-tight text-[12px] sm:text-lg font-semibold">{title}</h4>
             </div>
 
             <div className="flex items-center gap-4">

@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (token && pathname.startsWith('/login')) {
-    const homeUrl = new URL('/', request.url);
+    const homeUrl = new URL('/dashboard', request.url);
     return NextResponse.redirect(homeUrl);
   }
 
@@ -19,6 +19,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/task-board/:path*'],
+  matcher: ['/dashboard/:path*', '/login', '/task-board/:path*'],
 };
     

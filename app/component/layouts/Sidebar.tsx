@@ -53,66 +53,45 @@ const ClientSidebar: React.FC<ClientSidebarProps> = ({ onCollapseChange }) => {
                 boxShadow: '2px 0 8px rgba(0,0,0,0.15)',
             }}
             width={260}
-            collapsedWidth={80}
+            breakpoint="sm"
+            onBreakpoint={(broken) => {
+                setCollapsed(broken);
+            }}
+            collapsedWidth={60}
         >
             {/* Logo */}
             <div style={{
                 height: '64px',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: collapsed ? 'center' : 'flex-start',
+                justifyContent: collapsed ? 'center' : 'space-between',
                 padding: collapsed ? '0' : '0 24px',
                 borderBottom: '1px solid #303030'
             }}>
-                {collapsed ? (
-                    <div style={{
-                        width: '32px',
-                        height: '32px',
-                        backgroundColor: '#1890ff',
-                        borderRadius: '8px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white',
-                        fontWeight: 'bold'
-                    }}>
-                        TF
-                    </div>
-                ) : (
-                    <Space>
-                        <div style={{
-                            width: '32px',
-                            height: '32px',
-                            backgroundColor: '#1890ff',
-                            borderRadius: '8px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            color: 'white',
-                            fontWeight: 'bold'
-                        }}>
-                            TF
-                        </div>
-                        <Title level={4} style={{ margin: 0, color: 'white' }}>
-                            TaskFlow
-                        </Title>
-                    </Space>
-                )}
-            </div>
 
-            {/* Toggle Button */}
-            <div style={{ padding: '16px', borderBottom: '1px solid #303030' }}>
-                <Button
-                    type="text"
-                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                    onClick={toggleCollapse}
-                    style={{
-                        fontSize: '16px',
-                        width: '100%',
-                        height: '40px',
-                        color: 'white'
-                    }}
-                />
+                <Title level={4} style={{
+                    margin: 0,
+                    color: 'white',
+                    opacity: collapsed ? 0 : 1,
+                    transition: collapsed ? "none" : "opacity 0.5s ease-in",
+                }}>
+                    TaskFlow
+                </Title>
+                {/* Toggle Button */}
+                <div style={{ padding: '16px' }}>
+                    <Button
+                        type="text"
+                        icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                        onClick={toggleCollapse}
+                        style={{
+                            fontSize: '16px',
+                            width: '100%',
+                            height: '40px',
+                            color: 'white',
+                            transform: collapsed ? "translateX(-10px)" : "",
+                        }}
+                    />
+                </div>
             </div>
 
             <Menu
