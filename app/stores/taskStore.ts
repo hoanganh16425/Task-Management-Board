@@ -108,7 +108,7 @@ export const useTaskStore = create<TaskStore>()(
       {
         name: 'taskflow-storage',
         storage: createJSONStorage(() => localStorage),
-        partialize: (state) => ({ tasks: state.tasks }),
+        partialize: (state) => ({ tasks: state.tasks, columns: state.columns }),
       }
     ),
     { name: 'taskflow-store' }

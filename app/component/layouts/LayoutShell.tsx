@@ -1,3 +1,4 @@
+'use client'
 import React from 'react';
 import { Layout } from 'antd';
 
@@ -9,7 +10,7 @@ interface LayoutShellProps {
 
 const LayoutShell: React.FC<LayoutShellProps> = ({ children, sidebar, header }) => {
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ minHeight: '100vh', flexDirection: 'row' }}>
       {sidebar}
       <Layout>
         {header}

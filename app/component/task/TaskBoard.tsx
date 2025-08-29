@@ -181,7 +181,7 @@ const TaskBoard: React.FC = () => {
             </div>
 
             {
-                columns && <Empty
+                !columns && <Empty
                 description={`No column task`}
                 className="mt-[50px]"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
