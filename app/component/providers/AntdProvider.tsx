@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { ConfigProvider, theme } from 'antd';
+import { App, ConfigProvider, theme } from 'antd';
 import { StyleProvider } from '@ant-design/cssinjs';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 
@@ -29,7 +29,11 @@ const AntdProvider: React.FC<AntdProviderProps> = ({ children }) => {
           },
         }}
       >
-       <AntdRegistry>{children}</AntdRegistry>
+        <AntdRegistry>
+          <App>
+            {children}
+          </App>
+        </AntdRegistry>
       </ConfigProvider>
     </StyleProvider>
   );

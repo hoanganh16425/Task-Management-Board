@@ -7,6 +7,7 @@ import {
     ProjectOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
+    UserOutlined,
 } from '@ant-design/icons';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
@@ -34,6 +35,11 @@ const ClientSidebar: React.FC<ClientSidebarProps> = ({ onCollapseChange }) => {
             key: '/task-board',
             icon: <ProjectOutlined />,
             label: <Link href="/task-board">Task Board</Link>,
+        },
+        {
+            key: '/user',
+            icon: <UserOutlined />,
+            label: <Link href="/user-list">User</Link>,
         }
     ];
 
