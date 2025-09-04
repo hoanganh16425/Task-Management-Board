@@ -1,6 +1,7 @@
 'use client'
 import React from 'react';
 import { Layout } from 'antd';
+import PerformanceTestGuide from '../shares/PerformanceTestGuide';
 
 interface LayoutShellProps {
   children: React.ReactNode;
@@ -22,6 +23,7 @@ const LayoutShell: React.FC<LayoutShellProps> = ({ children, sidebar, header }) 
         }}>
           {children}
         </Layout.Content>
+        <PerformanceTestGuide />
       </Layout>
     </Layout>
   );

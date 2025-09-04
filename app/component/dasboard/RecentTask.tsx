@@ -24,7 +24,7 @@ const RecentTask: React.FC = () => {
                 renderItem={(task) => (
                     <List.Item>
                         <List.Item.Meta
-                            avatar={<Avatar style={{ backgroundColor: '#1890ff' }} src={task.assignee?.avatar ?? DEFAULT_IMAGE}></Avatar>}
+                            avatar={<Avatar style={{ backgroundColor: '#1890ff' }} src={task.assignee?.avatar ?? DEFAULT_IMAGE} alt={task.assignee?.name} />}
                             title={<Text>{task.title}</Text>}
                             description={
                                 <Space>
