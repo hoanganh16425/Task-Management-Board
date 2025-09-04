@@ -29,12 +29,11 @@ import {
     Typography
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 
 // Import Zustand store
 import {
     User,
-    UserFormData,
     useUserStore
 } from '@/app/stores/userStore';
 import { useShallow } from 'zustand/shallow';
@@ -84,8 +83,8 @@ StatusTag.displayName = 'StatusTag';
 
 
 const UserActionRow = memo(({ user, onEdit, onDelete }: { user: User; onEdit: (user: User) => void; onDelete: (userId: string) => void }) => {
-    const handleEdit = useCallback(() => onEdit(user), [user, onEdit]);
-    const handleDelete = useCallback(() => onDelete(user.id), [user.id, onDelete]);
+    const handleEdit = () => onEdit(user);
+    const handleDelete = () => onDelete(user.id);
     return (
         <Space>
             <Button
@@ -124,23 +123,19 @@ const ActionButtons = memo(({
 });
 ActionButtons.displayName = 'ActionButtons';
 
-export default function UserListPage() {
+export default function TableUserFilter() {
     const { filteredUsers, filters, loading } = useUserStore(useShallow((state) => ({
         filteredUsers: state.filteredUsers,
         filters: state.filters,
         loading: state.loading,
     })));
-    const { addUser,
-        updateUser,
-        deleteUser,
+    const { 
         loadUsers,
         setFilters,
         clearFilters,
     } = useUserStore();
     const [form] = Form.useForm();
-    const { message } = App.useApp();
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const [editingUser, setEditingUser] = useState<User>();
     const [viewUserDetail, setViewUserDetail] = useState<User>();
 
     useEffect(() => {
@@ -149,57 +144,28 @@ export default function UserListPage() {
 
     useEffect(() => {
         if (isOpenModal) {
-            if (editingUser) {
-                form.setFieldsValue(editingUser);
-            } 
-            else if (viewUserDetail) {
+            if (viewUserDetail) {
                 form.setFieldsValue(viewUserDetail);
             }
             else {
                 form.resetFields();
             }
         }
-    }, [isOpenModal, editingUser, viewUserDetail, form]);
+    }, [isOpenModal, viewUserDetail, form]);
 
     // const handleAddUser = () => {
     //     setIsOpenModal(true);
     // };
 
-    const handleEditUser = useCallback((user: User) => {
-        setIsOpenModal(true);
-        setEditingUser(user);
-    }, [setIsOpenModal]);
+    // const handleEditUser = useCallback((user: User) => {
+    //     setIsOpenModal(true);
+    //     setEditingUser(user);
+    // }, [setIsOpenModal]);
 
-    const handleViewUserDetail = useCallback((user: User) => {
+    const handleViewUserDetail = (user: User) => {
         setIsOpenModal(true);
         setViewUserDetail(user);
-    }, [setIsOpenModal]);
-
-    const handleDeleteUser = useCallback(async (userId: string) => {
-        try {
-            await deleteUser(userId);
-            message.success('User deleted successfully');
-        } catch (error) {
-            console.error(error);
-            message.error('Failed to delete user');
-        }
-    }, [deleteUser, message]);
-
-    const handleSubmit = useCallback(async (values: UserFormData) => {
-        try {
-            if (editingUser) {
-                await updateUser(editingUser.id, values);
-                message.success('User updated successfully');
-            } else {
-                await addUser(values);
-                message.success('User added successfully');
-            }
-            form.resetFields();
-        } catch (error) {
-            console.error(error);
-            message.error(editingUser ? 'Failed to update user' : 'Failed to add user');
-        }
-    }, [editingUser, addUser, updateUser, form, message]);
+    };
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFilters({ search: e.target.value });
@@ -219,7 +185,7 @@ export default function UserListPage() {
 
     const handleModalCancel = () => {
         setIsOpenModal(false);
-        setEditingUser(undefined);
+        // setEditingUser(undefined);
         setViewUserDetail(undefined);
         form.resetFields();
     };
@@ -235,7 +201,7 @@ export default function UserListPage() {
 
     UserRow.displayName = 'UserRow';
 
-    const columns: ColumnsType<User> = useMemo(() => [
+    const columns: ColumnsType<User> =[
         {
             title: 'User',
             dataIndex: 'firstName',
@@ -276,19 +242,6 @@ export default function UserListPage() {
             render: (date) => new Date(date).toLocaleDateString(),
         },
         {
-            title: 'Actions',
-            key: 'actions',
-            align: 'center',
-            width: 120,
-            render: (_, record) => (
-                <ActionButtons
-                    user={record}
-                    onEdit={handleEditUser}
-                    onDelete={handleDeleteUser}
-                />
-            ),
-        },
-        {
             title: 'View details',
             key: 'viewDetails',
             align: 'center',
@@ -300,22 +253,22 @@ export default function UserListPage() {
                 </div>
             ),
         },
-    ], [handleEditUser, handleDeleteUser]);
+    ];
 
 
 
-    const paginationConfig = useMemo(() => ({
+    const paginationConfig = () => ({
         total: filteredUsers.length,
         pageSize: 10,
         showSizeChanger: true,
         showQuickJumper: true,
         showTotal: (total: number, range: [number, number]) =>
             `${range[0]}-${range[1]} of ${total} users`,
-    }), [filteredUsers.length]);
+    });
 
-    const hasActiveFilters = useMemo(() => {
+    const hasActiveFilters = () => {
         return filters.search || filters.role || filters.status;
-    }, [filters]);
+    };
 
 
     return (
@@ -367,7 +320,7 @@ export default function UserListPage() {
                     </Col>
                     <Col xs={24} sm={12} md={10} className="flex justify-end">
                         <Space>
-                            {hasActiveFilters && (
+                            {hasActiveFilters() && (
                                 <Button
                                     icon={<ClearOutlined />}
                                     onClick={handleClearFilters}
@@ -400,13 +353,13 @@ export default function UserListPage() {
                     dataSource={filteredUsers}
                     rowKey="id"
                     loading={loading}
-                    pagination={paginationConfig}
+                    pagination={paginationConfig()}
                     scroll={{ x: 800 }}
                 />
             </Card>
 
             <Modal
-                title={editingUser ? 'Edit User' : 'View User Details'}
+                title='View User Details'
                 open={isOpenModal}
                 onCancel={handleModalCancel}
                 footer={null}
@@ -416,7 +369,7 @@ export default function UserListPage() {
                 <Form
                     form={form}
                     layout="vertical"
-                    onFinish={handleSubmit}
+                    // onFinish={handleSubmit}
                     className="mt-4"
                 >
                     <Row gutter={16}>
@@ -528,10 +481,6 @@ export default function UserListPage() {
                             <Button onClick={handleModalCancel}>
                                 Cancel
                             </Button>
-                            {!viewUserDetail && <Button type="primary" htmlType="submit" loading={loading}>
-                                {editingUser ? 'Update User' : 'Add User'}
-                            </Button>}
-                            
                         </Space>
                     </Form.Item>
                 </Form>
